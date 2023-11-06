@@ -49,11 +49,39 @@ class AnimalProcessor(
     private fun genFile(
         animals: Map<String, KSClassDeclaration>
     ): FileSpec {
+        /**
+          package com.eliascoelho911.animal.generated
+          import com.eliascoelho911.animal.Animal
+          import com.eliascoelho911.animal.Cat
+          import com.eliascoelho911.animal.Dog
+          import kotlin.String
+          import kotlin.collections.List
+          import kotlin.collections.listOf
+
+          public class AnimalProvider {
+            fun get(name: String): Animal = when (name) {
+               "Dog" -> Dog()
+               "Cat" -> Cat()
+               else -> throw IllegalArgumentException("Animal not found")
+            }
+
+            fun getAll(): List<Animal> = listOf(
+                Dog(),
+                Cat())
+            }
+         */
         return FileSpec.builder(
             packageName = GENERATE_FILE_PACKAGE,
             fileName = GENERATE_CLASS_NAME
         ).addType(
             TypeSpec.classBuilder(GENERATE_CLASS_NAME)
+                /**
+                  fun get(name: String): Animal = when (name) {
+                      "Dog" -> Dog()
+                      "Cat" -> Cat()
+                      else -> throw IllegalArgumentException("Animal not found")
+                  }
+                 */
                 .addFunction(
                     FunSpec.builder("get")
                         .addParameter("name", String::class)
@@ -71,6 +99,12 @@ class AnimalProcessor(
                         .endControlFlow()
                         .build()
                 )
+                /**
+                  fun getAll(): List<Animal> = listOf(
+                     Dog(),
+                     Cat()
+                  )
+                 */
                 .addFunction(
                     FunSpec.builder("getAll")
                         .returns(
